@@ -1,5 +1,6 @@
 import re
 import requests
+import sys
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 
@@ -7,9 +8,15 @@ class Scraper:
     URL = 'https://cliffhangerclimbing.com/core/book/member-booking'
 
     def _getTimesList(self):
-        result = requests.get(Scraper.URL)
-        parser = BeautifulSoup(result.text, 'html.parser')
-        return [time.text.strip() for time in parser.tbody.find_all('label')]
+        time_list = []
+        try:
+            result = requests.get(Scraper.URL)
+            parser = BeautifulSoup(result.text, 'html.parser')
+            time_list = [time.text.strip() for time in parser.tbody.find_all('label')]
+        except ConnectionError as e:
+            print(e, file=sys.stderr)
+
+        return time_list
 
     def _getTimesFromList(self, times_list):
         times = dict()
