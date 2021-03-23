@@ -13,7 +13,7 @@ class Scraper:
             result = requests.get(Scraper.URL)
             parser = BeautifulSoup(result.text, 'html.parser')
             time_list = [time.text.strip() for time in parser.tbody.find_all('label')]
-        except ConnectionError as e:
+        except (AttributeError, ConnectionError) as e:
             print(e, file=sys.stderr)
 
         return time_list
