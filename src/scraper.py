@@ -1,6 +1,8 @@
+import logging
 import re
 import requests
 import sys
+
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
 
@@ -13,8 +15,8 @@ class Scraper:
             result = requests.get(Scraper.URL)
             parser = BeautifulSoup(result.text, 'html.parser')
             time_list = [time.text.strip() for time in parser.tbody.find_all('label')]
-        except (AttributeError, ConnectionError) as e:
-            print(e, file=sys.stderr)
+        except (AttributeError, requests.exceptions.ConnectionError) as e:
+            logging.error(e)
 
         return time_list
 
